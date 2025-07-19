@@ -25,14 +25,31 @@ import (
 	"fmt"
 	"os"
 
+	"musgit"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
 
+var dbUri string
+var musgitService *musgit.MusgitService
+
+// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use: "musgit",
+	Use:     "musgit-cli",
+	Short:   "Musgit CLI client.",
+	Version: "0.0.0",
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		if dbUri == "" {
+			return fmt.Errorf("Missing --db-uri flag.")
+		}
+		musgitService = musgit.NewMusgitService(dbUri)
+		return nil
+	},
 }
 
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -41,7 +58,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringP("db-uri", "d", "", "DB with data")
+	rootCmd.PersistentFlags().
+		StringVarP(&dbUri, "db-uri", "d", "", "DB with data")
 	err := viper.BindPFlag("db-uri", rootCmd.PersistentFlags().Lookup("db-uri"))
 	if err != nil {
 		fmt.Println("DB URI is not provided.")

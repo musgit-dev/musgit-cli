@@ -27,31 +27,39 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// lessonCmd represents the lesson command
-var lessonCmd = &cobra.Command{
-	Use:   "lesson",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+var pieceCmd = &cobra.Command{
+	Use:   "piece",
+	Short: "Working with pieces",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("lesson called")
+		fmt.Println("piece called")
+	},
+}
+var showPieceCmd = &cobra.Command{
+	Use:   "show <piece_id>",
+	Short: "Shows information about the piece",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("piece shown")
+	},
+}
+var addPieceCmd = &cobra.Command{
+	Use:   "add",
+	Short: "Adds new piece",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("piece added")
+	},
+}
+var practicePieceCmd = &cobra.Command{
+	Use:   "practice <piece_id>",
+	Short: "Starts practice for a selected piece",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("piece practiced")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(lessonCmd)
+	rootCmd.AddCommand(pieceCmd)
+	pieceCmd.AddCommand(showPieceCmd)
+	pieceCmd.AddCommand(addPieceCmd)
+	pieceCmd.AddCommand(practicePieceCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// lessonCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// lessonCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

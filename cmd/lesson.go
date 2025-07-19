@@ -22,46 +22,51 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"log"
-	"musgit/internal/adapters/db"
-	"musgit/internal/application/api"
-	"musgit/internal/application/domain"
-	"strconv"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
 
-var stopCmd = &cobra.Command{
-	Use:   "stop <piece_id>",
-	Short: "Stop practice of a specified piece",
+var lessonCmd = &cobra.Command{
+	Use:   "lesson",
+	Short: "Works with lessons",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		pieceId, err := strconv.Atoi(args[0])
-		if err != nil {
-			log.Fatalf("Incorrect id: %s", args[0])
+		lessons := musgitService.GetLessons()
+		for i, lesson := range lessons {
+			fmt.Printf("%d: \t%d\n", i, lesson.ID)
 		}
+		return nil
 
-		evaluation := domain.PracticeProgressNormal
+	},
+}
 
-		err = stopPractice(int64(pieceId), evaluation)
-		return err
+var startLessonCmd = &cobra.Command{
+	Use:   "start",
+	Short: "Stars new lesson",
+	Run: func(cmd *cobra.Command, args []string) {
+		lesson, _ := musgitService.StartLesson()
+		fmt.Println("lesson started:", lesson.ID)
+	},
+}
+
+var pauseLessonCmd = &cobra.Command{
+	Use:   "pause",
+	Short: "Pauses current lesson",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("lesson paused")
+	},
+}
+var stopLessonCmd = &cobra.Command{
+	Use:   "stop",
+	Short: "Stops current lesson",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("lesson completed")
 	},
 }
 
 func init() {
-	practiceCmd.AddCommand(stopCmd)
-}
-
-func stopPractice(
-	pieceId int64,
-	evaluation domain.PracticeProgressEvalutation,
-) error {
-	dbAdapter, dbErr := db.NewAdapter("musgit.db")
-	if dbErr != nil {
-		log.Fatalf("Failed to init db, err: %v", dbErr)
-	}
-
-	app := api.NewMusgitService(dbAdapter)
-	err := app.StopPractice(pieceId, evaluation)
-	log.Printf("Started practice for piece %d", pieceId)
-	return err
+	rootCmd.AddCommand(lessonCmd)
+	lessonCmd.AddCommand(startLessonCmd)
+	lessonCmd.AddCommand(stopLessonCmd)
+	lessonCmd.AddCommand(pauseLessonCmd)
 }

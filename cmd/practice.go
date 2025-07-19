@@ -27,31 +27,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// pieceCmd represents the piece command
-var pieceCmd = &cobra.Command{
-	Use:   "piece",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+var practiceCmd = &cobra.Command{
+	Use:   "practice",
+	Short: "Shows information on practices",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("piece called")
+		fmt.Println("practice called")
+	},
+}
+var stopPracticeCmd = &cobra.Command{
+	Use:   "stop <practice_id>",
+	Short: "Stops selected practice",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("practice stopped")
+	},
+}
+var evalutePracticeCmd = &cobra.Command{
+	Use:   "evalute <practice_id> <evaluation>",
+	Short: "Provide evaluation for the practice",
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("practice evaluated")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(pieceCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// pieceCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// pieceCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.AddCommand(practiceCmd)
+	practiceCmd.AddCommand(stopPracticeCmd)
+	practiceCmd.AddCommand(evalutePracticeCmd)
 }
