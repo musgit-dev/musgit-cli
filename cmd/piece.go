@@ -23,6 +23,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -31,14 +32,26 @@ var pieceCmd = &cobra.Command{
 	Use:   "piece",
 	Short: "Working with pieces",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("piece called")
+		for i, piece := range musgitService.GetPieces() {
+			fmt.Printf("%d: \t%s\n", i, piece.Name)
+		}
 	},
 }
 var showPieceCmd = &cobra.Command{
 	Use:   "show <piece_id>",
 	Short: "Shows information about the piece",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("piece shown")
+		pieceId, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		piece, err := musgitService.GetPiece(pieceId)
+		if err != nil {
+			fmt.Println("Unknown Piece Id:", pieceId)
+		}
+		fmt.Println(piece)
 	},
 }
 var addPieceCmd = &cobra.Command{
