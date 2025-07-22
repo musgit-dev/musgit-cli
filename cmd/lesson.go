@@ -53,20 +53,44 @@ var pauseLessonCmd = &cobra.Command{
 	Use:   "pause",
 	Short: "Pauses current lesson",
 	Run: func(cmd *cobra.Command, args []string) {
+		err := musgitService.PauseCurrentLesson()
+		if err != nil {
+			fmt.Println("Failed to pause lesson:", err)
+		}
+
 		fmt.Println("lesson paused")
+	},
+}
+
+var resumeLessonCmd = &cobra.Command{
+	Use:   "resume",
+	Short: "Resumes current lesson",
+	Run: func(cmd *cobra.Command, args []string) {
+		err := musgitService.ResumeCurrentLesson()
+		if err != nil {
+			fmt.Println("Failed to resume lesson:", err)
+		}
+
+		fmt.Println("lesson resumed")
 	},
 }
 var stopLessonCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stops current lesson",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("lesson completed")
+		err := musgitService.StopCurrentLesson()
+		if err != nil {
+			fmt.Println("Failed to stop lesson:", err)
+		}
+
+		fmt.Println("lesson stopped")
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(lessonCmd)
 	lessonCmd.AddCommand(startLessonCmd)
+	lessonCmd.AddCommand(resumeLessonCmd)
 	lessonCmd.AddCommand(stopLessonCmd)
 	lessonCmd.AddCommand(pauseLessonCmd)
 }
