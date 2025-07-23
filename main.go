@@ -21,7 +21,7 @@ THE SOFTWARE.
 */
 package main
 
-import "musgit-cli/cmd"
+import "github.com/musgit-dev/musgit-cli/cmd"
 
 func main() {
 	cmd.Execute()

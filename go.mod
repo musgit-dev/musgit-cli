@@ -1,11 +1,11 @@
-module musgit-cli
+module github.com/musgit-dev/musgit-cli
 
 go 1.24.2
 
 require (
+	github.com/musgit-dev/musgit v0.0.1
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
-	musgit v0.0.0
 )
 
 require (
@@ -30,5 +30,3 @@ require (
 	gorm.io/driver/sqlite v1.5.7 // indirect
 	gorm.io/gorm v1.30.0 // indirect
 )
-
-replace musgit => ../musgit/

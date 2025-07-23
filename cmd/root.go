@@ -25,7 +25,7 @@ import (
 	"fmt"
 	"os"
 
-	"musgit"
+	"github.com/musgit-dev/musgit"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
