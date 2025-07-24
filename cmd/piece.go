@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/musgit-dev/musgit/models"
 	"github.com/spf13/cobra"
 )
 
@@ -58,14 +59,40 @@ var addPieceCmd = &cobra.Command{
 	Use:   "add",
 	Short: "Adds new piece",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("piece added")
+		name := cmd.Flag("name").Value.String()
+		composer := cmd.Flag("name").Value.String()
+		complexity, _ := strconv.Atoi(cmd.Flag("name").Value.String())
+		piece, err := musgitService.AddPiece(
+			name,
+			composer,
+			models.PieceComplexity(complexity),
+		)
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println("Added new piece: ", piece.ID)
 	},
 }
 var practicePieceCmd = &cobra.Command{
 	Use:   "practice <piece_id>",
 	Short: "Starts practice for a selected piece",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("piece practiced")
+		pieceId, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		lessonId, _ := strconv.ParseInt(
+			cmd.Flag("lesson").Value.String(),
+			10,
+			64,
+		)
+		practice, err := musgitService.PracticePiece(pieceId, lessonId)
+		if err != nil {
+			fmt.Println("Failed to start practice :", err)
+		}
+		fmt.Println("Started practice: ", practice.ID)
 	},
 }
 
@@ -75,4 +102,9 @@ func init() {
 	pieceCmd.AddCommand(addPieceCmd)
 	pieceCmd.AddCommand(practicePieceCmd)
 
+	addPieceCmd.Flags().String("name", "", "Name of a piece")
+	addPieceCmd.Flags().String("composer", "", "Composer")
+	addPieceCmd.Flags().Int64("complexity", 0, "Complexity of a piece")
+
+	practicePieceCmd.Flags().Int64("lesson", 1, "Lesson ID")
 }

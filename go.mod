@@ -3,7 +3,7 @@ module github.com/musgit-dev/musgit-cli
 go 1.24.2
 
 require (
-	github.com/musgit-dev/musgit v0.0.1
+	github.com/musgit-dev/musgit v0.0.2
 	github.com/spf13/cobra v1.9.1
 	github.com/spf13/viper v1.20.1
 )
