@@ -17,6 +17,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/spf13/cobra"
 )
@@ -28,11 +29,34 @@ var practiceCmd = &cobra.Command{
 		fmt.Println("practice called")
 	},
 }
-var stopPracticeCmd = &cobra.Command{
-	Use:   "stop <practice_id>",
-	Short: "Stops selected practice",
+var startPracticeCmd = &cobra.Command{
+	Use:   "start <piece_id>",
+	Short: "Starts practice for a piece",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("practice stopped")
+		pieceId, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			fmt.Println(err)
+		}
+		_, err = mg.Practice.Start(pieceId, 0)
+		if err != nil {
+			fmt.Println(err)
+		}
+	},
+}
+var stopPracticeCmd = &cobra.Command{
+	Use:   "stop <piece_id>",
+	Short: "Stops practice for a piece",
+	Args:  cobra.ExactArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
+		pieceId, err := strconv.ParseInt(args[0], 10, 64)
+		if err != nil {
+			fmt.Println(err)
+		}
+		_, err = mg.Practice.Stop(pieceId)
+		if err != nil {
+			fmt.Println(err)
+		}
 	},
 }
 var evalutePracticeCmd = &cobra.Command{
@@ -45,6 +69,7 @@ var evalutePracticeCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(practiceCmd)
+	practiceCmd.AddCommand(startPracticeCmd)
 	practiceCmd.AddCommand(stopPracticeCmd)
 	practiceCmd.AddCommand(evalutePracticeCmd)
 }

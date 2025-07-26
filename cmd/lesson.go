@@ -25,7 +25,7 @@ var lessonCmd = &cobra.Command{
 	Use:   "lesson",
 	Short: "Works with lessons",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		lessons := musgitService.GetLessons()
+		lessons := mg.Lesson.GetAll()
 		for i, lesson := range lessons {
 			fmt.Printf("%d: \t%d\n", i, lesson.ID)
 		}
@@ -38,7 +38,7 @@ var startLessonCmd = &cobra.Command{
 	Use:   "start",
 	Short: "Stars new lesson",
 	Run: func(cmd *cobra.Command, args []string) {
-		lesson, _ := musgitService.StartLesson()
+		lesson, _ := mg.Lesson.Start()
 		fmt.Println("lesson started:", lesson.ID)
 	},
 }
@@ -47,7 +47,7 @@ var pauseLessonCmd = &cobra.Command{
 	Use:   "pause",
 	Short: "Pauses current lesson",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := musgitService.PauseCurrentLesson()
+		err := mg.Lesson.PauseCurrent()
 		if err != nil {
 			fmt.Println("Failed to pause lesson:", err)
 		}
@@ -60,7 +60,7 @@ var resumeLessonCmd = &cobra.Command{
 	Use:   "resume",
 	Short: "Resumes current lesson",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := musgitService.ResumeCurrentLesson()
+		err := mg.Lesson.ResumeCurrent()
 		if err != nil {
 			fmt.Println("Failed to resume lesson:", err)
 		}
@@ -72,7 +72,7 @@ var stopLessonCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stops current lesson",
 	Run: func(cmd *cobra.Command, args []string) {
-		err := musgitService.StopCurrentLesson()
+		err := mg.Lesson.StopCurrent()
 		if err != nil {
 			fmt.Println("Failed to stop lesson:", err)
 		}

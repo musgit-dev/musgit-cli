@@ -29,7 +29,7 @@ import (
 
 var dbUri string
 var configFile string
-var musgitService *musgit.MusgitService
+var mg *musgit.Musgit
 
 var rootCmd = &cobra.Command{
 	Use:     "musgit-cli",
@@ -40,7 +40,7 @@ var rootCmd = &cobra.Command{
 		if dbUri == "" {
 			return fmt.Errorf("Missing --db-uri flag.")
 		}
-		musgitService = musgit.NewMusgitService(dbUri)
+		mg = musgit.New(dbUri)
 		return nil
 	},
 }

@@ -27,7 +27,7 @@ var pieceCmd = &cobra.Command{
 	Use:   "piece",
 	Short: "Working with pieces",
 	Run: func(cmd *cobra.Command, args []string) {
-		for _, piece := range musgitService.GetPieces() {
+		for _, piece := range mg.Piece.GetAll() {
 			displayPiece(piece)
 		}
 	},
@@ -42,7 +42,7 @@ var showPieceCmd = &cobra.Command{
 			fmt.Println(err)
 		}
 
-		piece, err := musgitService.GetPiece(pieceId)
+		piece, err := mg.Piece.Get(pieceId)
 		if err != nil {
 			fmt.Println("Unknown Piece Id:", pieceId)
 		}
@@ -56,7 +56,7 @@ var addPieceCmd = &cobra.Command{
 		name := cmd.Flag("name").Value.String()
 		composer := cmd.Flag("composer").Value.String()
 		complexity, _ := strconv.Atoi(cmd.Flag("name").Value.String())
-		piece, err := musgitService.AddPiece(
+		piece, err := mg.Piece.Add(
 			name,
 			composer,
 			models.PieceComplexity(complexity),
@@ -82,7 +82,7 @@ var practicePieceCmd = &cobra.Command{
 			10,
 			64,
 		)
-		practice, err := musgitService.PracticePiece(pieceId, lessonId)
+		practice, err := mg.Practice.Start(pieceId, lessonId)
 		if err != nil {
 			fmt.Println("Failed to start practice :", err)
 		}
