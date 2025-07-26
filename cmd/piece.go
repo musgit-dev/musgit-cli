@@ -27,8 +27,8 @@ var pieceCmd = &cobra.Command{
 	Use:   "piece",
 	Short: "Working with pieces",
 	Run: func(cmd *cobra.Command, args []string) {
-		for i, piece := range musgitService.GetPieces() {
-			fmt.Printf("%d: \t%s\n", i, piece.Name)
+		for _, piece := range musgitService.GetPieces() {
+			displayPiece(piece)
 		}
 	},
 }
@@ -46,7 +46,7 @@ var showPieceCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println("Unknown Piece Id:", pieceId)
 		}
-		fmt.Println(piece)
+		displayPiece(piece)
 	},
 }
 var addPieceCmd = &cobra.Command{
@@ -54,7 +54,7 @@ var addPieceCmd = &cobra.Command{
 	Short: "Adds new piece",
 	Run: func(cmd *cobra.Command, args []string) {
 		name := cmd.Flag("name").Value.String()
-		composer := cmd.Flag("name").Value.String()
+		composer := cmd.Flag("composer").Value.String()
 		complexity, _ := strconv.Atoi(cmd.Flag("name").Value.String())
 		piece, err := musgitService.AddPiece(
 			name,
@@ -88,6 +88,16 @@ var practicePieceCmd = &cobra.Command{
 		}
 		fmt.Println("Started practice: ", practice.ID)
 	},
+}
+
+func displayPiece(piece models.Piece) {
+	fmt.Printf(
+		"[%s]: %s\t\tPracticed %d time(s)\n",
+		piece.Composer.Name,
+		piece.Name,
+		len(piece.Practices),
+	)
+
 }
 
 func init() {
