@@ -40,6 +40,17 @@ musgit-cli pieces add --name "Piece Name" --composer "Composer" --complexity 1
 musgit-cli pieces practice 1
 ```
 
+## Configuration
+
+All your practices are stored in a Sqlite database (located in `$HOME/.musgit/musgit.db`)
+
+If you want to store results somewhere else use one of the following:
+
+* Adjust `db-uri` parameter in `$HOME/.musgit/musgit.yaml` file.
+* Pass DB file path to `--db-uri` CLI flag.
+* Add `MUSGIT_DB_URI` ENV variable.
+
+
 ## License
 
 Musgit is released under the Apache 2.0 license. See [LICENSE.txt](LICENSE.txt).

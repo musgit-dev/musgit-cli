@@ -17,7 +17,9 @@ package cmd
 
 import (
 	"fmt"
+	"log/slog"
 	"os"
+	"strings"
 
 	"github.com/musgit-dev/musgit"
 
@@ -26,14 +28,15 @@ import (
 )
 
 var dbUri string
+var configFile string
 var musgitService *musgit.MusgitService
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:     "musgit-cli",
 	Short:   "Musgit CLI client.",
 	Version: "0.0.0",
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		dbUri := viper.GetString("db-uri")
 		if dbUri == "" {
 			return fmt.Errorf("Missing --db-uri flag.")
 		}
@@ -42,8 +45,6 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -52,10 +53,34 @@ func Execute() {
 }
 
 func init() {
+	cobra.OnInitialize(initConfig)
 	rootCmd.PersistentFlags().
 		StringVarP(&dbUri, "db-uri", "d", "", "DB with data")
+	rootCmd.PersistentFlags().
+		StringVarP(&configFile, "config", "c", "",
+			"Config file (Default is $HOME/.musgit/musgit.yaml")
+
+	replacer := strings.NewReplacer("-", "_")
+	viper.SetEnvKeyReplacer(replacer)
+	viper.SetEnvPrefix("MUSGIT")
+
 	err := viper.BindPFlag("db-uri", rootCmd.PersistentFlags().Lookup("db-uri"))
 	if err != nil {
 		fmt.Println("DB URI is not provided.")
 	}
+}
+
+func initConfig() {
+	if configFile != "" {
+		viper.SetConfigFile(configFile)
+	} else {
+		home, _ := os.UserHomeDir()
+		viper.AddConfigPath(home + "/.musgit")
+		viper.SetConfigName("musgit")
+		viper.AutomaticEnv()
+
+		_ = viper.ReadInConfig()
+		slog.Info("config:", "path", viper.ConfigFileUsed())
+	}
+
 }
