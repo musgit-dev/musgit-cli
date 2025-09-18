@@ -17,7 +17,9 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 	"strconv"
+	"text/tabwriter"
 
 	"github.com/musgit-dev/musgit/models"
 	"github.com/spf13/cobra"
@@ -27,9 +29,15 @@ var pieceCmd = &cobra.Command{
 	Use:   "piece",
 	Short: "Working with pieces",
 	Run: func(cmd *cobra.Command, args []string) {
+		w := tabwriter.NewWriter(os.Stdout, 0, 0, 2, ' ', 0)
+		fmt.Fprintln(w, "Composer\tPiece\tPractices")
 		for _, piece := range mg.Piece.GetAll() {
-			displayPiece(piece)
+			fmt.Fprintf(w, "%s\t%s\t%d\n",
+				piece.Composer.Name,
+				piece.Name,
+				len(piece.Practices))
 		}
+		w.Flush()
 	},
 }
 var showPieceCmd = &cobra.Command{
