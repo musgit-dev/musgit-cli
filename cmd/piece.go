@@ -63,8 +63,9 @@ var addPieceCmd = &cobra.Command{
 		)
 		if err != nil {
 			fmt.Println(err)
+		} else {
+			fmt.Println("Added new piece: ", piece.ID)
 		}
-		fmt.Println("Added new piece: ", piece.ID)
 	},
 }
 var practicePieceCmd = &cobra.Command{
